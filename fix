@@ -1,0 +1,20 @@
+#!/bin/bash
+
+apt-get install linux-headers-`uname -r` build-essential automake1.9
+apt-get install linux-source
+
+mkdir onza
+cd onza
+tar -jxvf /usr/src/linux-source-`uname -r | awk -F"-" '{print $1}'`.tar.bz2 --strip 4 linux-source-`uname -r | awk -F"-" '{print $1}'`/drivers/input/joystick/xpad.c
+
+cp ../res/mf Makefile
+cp ../res/xpad xpad.c
+
+make
+make install
+modprobe -r xpad
+depmod -a
+modprobe xpad
+
+cd ..
+rm -r onza
